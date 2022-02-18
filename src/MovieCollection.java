@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Collections;
 
 public class MovieCollection
 {
@@ -164,6 +165,84 @@ public class MovieCollection
 
     private void searchCast()
     {
+        System.out.print("Enter a cast: ");
+        String searchCast = scanner.nextLine();
+
+        // prevent case sensitivity
+        searchCast = searchCast.toLowerCase();
+
+        // arraylist to hold search results
+        ArrayList<Movie> results = new ArrayList<Movie>();
+
+        // search through ALL movies in collection
+        for (int i = 0; i < movies.size(); i++)
+        {
+            String cast = movies.get(i).getCast();
+            cast = cast.toLowerCase();
+
+            if (cast.contains(searchCast))
+            {
+                //add the Movie object to the results list
+                results.add(movies.get(i));
+            }
+        }
+
+        String allCast = "";
+        for (int i = 0; i < results.size(); i++)
+        {
+            String c = results.get(i).getCast();
+            int index = searchCast.indexOf(c);
+            allCast += c.substring(0, index);
+            allCast += c.substring(index + searchCast.length());
+        }
+
+        String[] arrCast = allCast.split("\\|");
+
+        ArrayList<String> arrLCast = new ArrayList<String>();
+
+        for (int i = 0; i < arrCast.length; i++)
+        {
+            arrLCast.add(arrCast[i]);
+        }
+
+        Collections.sort(arrLCast);
+
+        for (int i = 0; i < arrLCast.size(); i++)
+        {
+            String current = arrLCast.get(i);
+            for (int x = 0; x < arrLCast.size(); x++)
+            {
+                if (current.equals(arrLCast.get(x)))
+                {
+                    arrLCast.remove(i);
+                    i--;
+                }
+            }
+        }
+
+        // now, display them all to the user
+        for (int i = 0; i < arrLCast.size(); i++)
+        {
+            String member = arrLCast.get(i);
+
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + member);
+        }
+
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = results.get(choice - 1);
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
 
     }
 
